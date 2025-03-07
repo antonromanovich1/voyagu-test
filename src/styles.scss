@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --bg-color: #fbfbfb;
+  --header-height: 76px;
+  --divider-color: #e2e0e3;
+  --content-width: 880px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: Inter, 'Helvetica Neue', sans-serif;
+}
+
+.app-container {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+}
