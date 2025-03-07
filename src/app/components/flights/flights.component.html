@@ -1,1 +1,24 @@
-<p>flights works!</p>
+<div class="flex gap-3">
+  <aside class="filter element-border">
+    <label>
+      <span>Sort By</span>
+      <p-select [options]="sortOptions"></p-select>
+    </label>
+    <label>
+      <span>Price</span>
+      <p-slider [(ngModel)]="rangeValues" [range]="true" styleClass="w-56" />
+    </label>
+    <label>
+      <span>Stops</span>
+      @for(stop of stopOptions; track stop.value) {
+      <div class="flex gap-2 align-items-center">
+        <p-checkbox [name]="stop.value" value="Small" />
+        <label>{{ stop.label }}</label>
+      </div>
+      }
+    </label>
+  </aside>
+  <div class="list element-border">
+    <ul></ul>
+  </div>
+</div>
