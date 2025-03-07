@@ -6,6 +6,7 @@ import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { VoyaguTest } from './utils/voyagu-theme.presets';
+import { DatePipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +19,6 @@ export const appConfig: ApplicationConfig = {
         preset: VoyaguTest,
       },
     }),
+    DatePipe,
   ],
 };
