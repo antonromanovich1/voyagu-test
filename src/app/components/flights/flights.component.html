@@ -1,4 +1,4 @@
-<div class="flex gap-3">
+<div class="flex gap-3 align-items-start">
   <aside class="filter element-border">
     <label>
       <span>Sort By</span>
@@ -18,7 +18,14 @@
       }
     </label>
   </aside>
-  <div class="list element-border">
-    <ul></ul>
+  <div class="list">
+    <ul class="flex flex-column gap-4">
+      <app-flight-card />
+      <app-flight-card />
+      <app-flight-card />
+      <app-flight-card />
+      <app-flight-card />
+    </ul>
+    <p-button severity="secondary" variant="outlined" label="Load More" [fluid]="true" [size]="'large'"></p-button>
   </div>
 </div>

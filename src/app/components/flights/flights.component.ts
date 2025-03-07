@@ -4,14 +4,21 @@ import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FlightService } from '../../services/flight.service';
 import { FormsModule } from '@angular/forms';
+import { FlightCardComponent } from '../flight-card/flight-card.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-flights',
-  imports: [SelectModule, SliderModule, FormsModule, CheckboxModule],
+  imports: [SelectModule, SliderModule, FormsModule, CheckboxModule, FlightCardComponent, ButtonModule],
   templateUrl: './flights.component.html',
   styleUrl: './flights.component.scss',
 })
-export class FlightsComponent {
+export class FlightsComponent implements OnInit {
+  ngOnInit(): void {
+    this.flightService.getFlights().subscribe((flights) => console.log(flights));
+  }
+
+  private flightService = inject(FlightService);
   protected readonly sortOptions = [
     { label: 'Price (Lowest)', value: 'price-low' },
     { label: 'Price (Highest)', value: 'price-high' },
