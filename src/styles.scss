@@ -5,6 +5,8 @@
   --header-height: 76px;
   --divider-color: #e2e0e3;
   --content-width: 880px;
+  --card-size: 160px;
+  --grey-color: #898390;
 }
 
 // Reset&Common
@@ -36,4 +38,12 @@ body {
 .element-border {
   border: 1px solid var(--divider-color);
   border-radius: 12px;
+}
+
+.card-size {
+  height: var(--card-size);
+}
+
+.grey-color {
+  color: var(--grey-color);
 }

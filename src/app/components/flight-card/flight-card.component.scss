@@ -1,0 +1,40 @@
+.card-left {
+  flex-grow: 1;
+  border-right: 1px solid var(--divider-color);
+
+  tr {
+    padding: 16px 0px;
+  }
+
+  td {
+    padding: 0px 10px;
+    text-align: center;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .img-wrapper {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+.card-right {
+  flex-basis: 205px;
+  padding: 1.5rem 1rem 1rem;
+
+  small {
+    color: var(--grey-color);
+  }
+}
+
+.wrapper {
+  transition: all 0.2s ease-in-out;
+}
+
+.wrapper:has(p-button:hover) {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
