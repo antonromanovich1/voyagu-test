@@ -1,30 +1,60 @@
 <div class="flex gap-3 align-items-start">
-  <aside class="filter element-border">
+  @if(filtersData$ | async; as filters) {
+  <aside [formGroup]="form" class="filter element-border">
     <label>
       <span>Sort By</span>
-      <p-select [options]="sortOptions"></p-select>
+      <p-select formControlName="sort" [options]="sortOptions"></p-select>
     </label>
     <label>
       <span>Price</span>
-      <p-slider [(ngModel)]="rangeValues" [range]="true" styleClass="w-56" />
+      <span
+        class="text-sm grey-color"
+        >{{ (form.get('range')?.value?.[0] | currency) + '-' +  (form.get('range')?.value?.[1] | currency)}}</span
+      >
+      <p-slider
+        formControlName="range"
+        [min]="minRange"
+        [max]="maxRange"
+        step="0.1"
+        [animate]="true"
+        [range]="true"
+        styleClass="w-56"
+      />
     </label>
-    <label>
+    <div class="flex flex-column gap-2">
       <span>Stops</span>
-      @for(stop of stopOptions; track stop.value) {
-      <div class="flex gap-2 align-items-center">
-        <p-checkbox [name]="stop.value" value="Small" />
-        <label>{{ stop.label }}</label>
+      <div class="flex align-items-center gap-2">
+        <p-checkbox formControlName="allStop" [binary]="true" [size]="'large'"></p-checkbox>
+        <label>{{ 'All Stops' }}</label>
       </div>
-      }
-    </label>
+      <div class="flex flex-column gap-2" formArrayName="stops">
+        @for(checkbox of stops.controls; track $index) {
+        <div class="flex align-items-center gap-2">
+          <p-checkbox
+            name="group"
+            (onChange)="test()"
+            [formControlName]="$index"
+            [binary]="true"
+            [size]="'large'"
+          ></p-checkbox>
+          <label>{{
+            stopTest[$index] === '0'
+              ? 'Nonstop'
+              : +stopTest[$index] > 1
+              ? stopTest[$index] + ' stops'
+              : stopTest[$index] + ' stop'
+          }}</label>
+        </div>
+        }
+      </div>
+    </div>
   </aside>
+  }
   <div class="list">
     <ul class="flex flex-column gap-4">
-      <app-flight-card />
-      <app-flight-card />
-      <app-flight-card />
-      <app-flight-card />
-      <app-flight-card />
+      @for(flight of (flightsToShow$ | async); track $index) {
+      <app-flight-card [flightData]="flight"></app-flight-card>
+      }
     </ul>
     <p-button severity="secondary" variant="outlined" label="Load More" [fluid]="true" [size]="'large'"></p-button>
   </div>
