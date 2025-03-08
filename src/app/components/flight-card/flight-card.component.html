@@ -1,7 +1,7 @@
 <div class="element-border card-size flex justify-content-center wrapper">
   <div class="card-left">
     <table class="w-full h-full text-sm text-normal">
-      @for(line of flightData.flights; track $index ) {
+      @for(line of flightData().flights; track $index ) {
       <tr>
         <td class="w-2">
           <div class="img-wrapper inline-flex">
@@ -32,7 +32,7 @@
     </table>
   </div>
   <div class="card-right flex flex-column">
-    <div class="text-lg font-semibold text-center mb-1">{{ 3423 | currency }}</div>
+    <div class="text-lg font-semibold text-center mb-1">{{ flightData().price | currency }}</div>
     <small class="text-sm font-normal text-center">Per person</small>
     <p-button class="mt-auto" [fluid]="true" [size]="'large'" label="Book"></p-button>
   </div>
