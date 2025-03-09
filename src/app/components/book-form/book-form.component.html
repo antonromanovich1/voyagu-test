@@ -1,0 +1,83 @@
+<div class="flex gap-3 align-items-start font-normal">
+  <div class="main-section">
+    <h3 class="text-xl font-semibold">Travellers</h3>
+    <div class="flex flex-column gap-3">
+      <form class="flex flex-column gap-3 element-border p-3" [formGroup]="form">
+        <h4>Traceller 1: Adult</h4>
+        <!-- Name -->
+        <label class="flex flex-column">
+          <span class="form-label">First Name</span>
+          <input placeholder="First Name" formControlName="name" type="text" pInputText />
+        </label>
+        <!-- Last Name -->
+        <label class="flex flex-column">
+          <span class="form-label">Last Name</span>
+          <input placeholder="Last Name" formControlName="lastname" type="text" pInputText />
+        </label>
+        <!-- Gender -->
+        <div>
+          <span class="form-label">Gender</span>
+          <div>
+            <p-radiobutton formControlName="gender" name="gender" inputId="male" value="male" />
+            <label for="male" class="ml-2 mr-2">{{ 'Male' }}</label>
+            <p-radiobutton formControlName="gender" name="gender" inputId="female" value="female" />
+            <label for="female" class="ml-2">{{ 'Female' }}</label>
+          </div>
+        </div>
+        <!-- DOB -->
+        <div class="flex gap-3">
+          <label class="w-4 flex flex-column">
+            <span class="form-label">Month of Birth</span>
+            <p-datepicker placeholder="Month of Birth" formControlName="month" view="month" dateFormat="mm/yy" />
+          </label>
+          <label class="w-4 flex flex-column">
+            <span class="form-label">Day of Birth</span>
+            <p-select placeholder="Day of Birth" formControlName="day" [options]="days"></p-select>
+          </label>
+          <label class="w-4 flex flex-column">
+            <span class="form-label">Year of Birth</span>
+            <p-datepicker placeholder="Year of Birth" formControlName="year" view="year" dateFormat="yy" />
+          </label>
+        </div>
+        <!-- Citizenship -->
+        <div class="flex flex-column">
+          <span class="form-label">Citizenship</span>
+          <p-select
+            placeholder="Citizenship"
+            formControlName="citizenship"
+            [options]="countries"
+            [filter]="true"
+            [virtualScroll]="true"
+            [virtualScrollItemSize]="36"
+          ></p-select>
+        </div>
+      </form>
+      <div class="flex justify-content-between">
+        <p-button
+          (click)="onBackClick()"
+          variant="outlined"
+          severity="secondary"
+          [size]="'large'"
+          label="Back"
+        ></p-button>
+        <p-button [size]="'large'" label="Confirm" [disabled]="form.invalid" (click)="onConfirmClick()"></p-button>
+      </div>
+    </div>
+  </div>
+  @if(totalPrice) {
+  <aside class="aside p-0">
+    <h3 class="text-xl font-semibold">Price Summary</h3>
+    <div class="element-border flex flex-column p-3">
+      <div class="flex justify-content-between fligth-wrap pb-3">
+        <span class="flex align-items-center gap-1"><span class="plane-icon"></span>Flight</span>
+        <span>{{ totalPrice | currency }}</span>
+      </div>
+      <div class="flex justify-content-between align-items-end pt-3">
+        <span>Total</span>
+        <span class="text-4xl" [innerHTML]="totalPrice | currencyDecimalSeparate"></span>
+      </div>
+    </div>
+  </aside>
+
+  }
+</div>

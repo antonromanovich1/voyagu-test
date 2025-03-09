@@ -1,1 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --bg-color: #fbfbfb;
+  --header-height: 76px;
+  --divider-color: #e2e0e3;
+  --content-width: 880px;
+  --card-size: 160px;
+  --grey-color: #898390;
+  --blue-main: #2f7bea;
+}
+
+// Reset&Common
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: Inter, 'Helvetica Neue', sans-serif;
+}
+
+.app-container {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+// PrimeNG
+
+.p-slider .p-slider-range {
+  --p-slider-range-background: var(--blue-main);
+}
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box {
+  --p-checkbox-checked-background: var(--blue-main);
+  --p-checkbox-checked-border-color: var(--blue-main);
+}
+
+.p-checkbox.p-checkbox-checked:hover .p-checkbox-box {
+  --p-checkbox-checked-hover-background: var(--blue-main);
+  --p-checkbox-checked-hover-border-color: var(--blue-main);
+}
+
+// Utils
+
+.aside {
+  padding: 1rem;
+  flex-shrink: 0;
+  flex-basis: 240px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.main-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.element-border {
+  border: 1px solid var(--divider-color);
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.card-size {
+  height: var(--card-size);
+}
+
+.grey-color {
+  color: var(--grey-color);
+}
+
+.currency-decimal {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.form-label {
+  margin-bottom: 0.25rem;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--grey-color);
+}

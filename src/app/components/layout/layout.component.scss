@@ -1,0 +1,10 @@
+.header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.content {
+  width: var(--content-width);
+  flex-grow: 1;
+  padding-top: 2rem;
+}

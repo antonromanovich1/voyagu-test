@@ -1,0 +1,12 @@
+.filter {
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.range-display {
+  padding: 0.5rem 1rem;
+  background-color: white;
+}

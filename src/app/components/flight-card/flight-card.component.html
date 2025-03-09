@@ -1,0 +1,39 @@
+<div class="element-border card-size flex justify-content-center wrapper">
+  <div class="card-left">
+    <table class="w-full h-full text-sm text-normal">
+      @for(line of flightData().flights; track $index ) {
+      <tr>
+        <td class="w-2">
+          <div class="img-wrapper inline-flex">
+            <img [src]="'https://d263qmvlt29h99.cloudfront.net/' + line.airline + '.svg'" alt="airline logo" />
+          </div>
+        </td>
+        <td class="w-3">
+          <div>{{ line.departure_time | formatToAmPm }}</div>
+          <div class="grey-color">
+            {{ line.departure_airport + ' - ' + (line.departure_date | formatShortDayMonth) }}
+          </div>
+        </td>
+        <td class="w-3">
+          <div>{{ line.arrival_time | formatToAmPm }}</div>
+          <div class="grey-color">
+            {{ line.arrival_airport + ' - ' + (line.arrival_date | formatShortDayMonth) }}
+          </div>
+        </td>
+        <td class="w-3">
+          <div>{{ line.duration_minutes | formattedMinutes }}</div>
+          <div class="grey-color">
+            {{ line.stops === 0 ? 'Nonstop' : line.stops + ' stop' + (line.stops > 1 ? 's' : '') }}
+          </div>
+        </td>
+      </tr>
+
+      }
+    </table>
+  </div>
+  <div class="card-right flex flex-column">
+    <div class="text-lg font-semibold text-center mb-1">{{ flightData().price | currency }}</div>
+    <small class="text-sm font-normal text-center">Per person</small>
+    <p-button (click)="onBookClick(flightData().price)" class="mt-auto" [fluid]="true" [size]="'large'" label="Book"></p-button>
+  </div>
+</div>

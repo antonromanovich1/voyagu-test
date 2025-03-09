@@ -1,0 +1,44 @@
+<div class="flex gap-3 align-items-start">
+  <aside [formGroup]="form" class="filter aside element-border">
+    <label>
+      <span>Sort By</span>
+      <p-select formControlName="sort" optionValue="value" optionLabel="label" [options]="sortOptions"></p-select>
+    </label>
+    <label>
+      <span>Price</span>
+      <span
+        class="text-sm grey-color"
+        >{{ (form.get('range')?.value?.[0] | currency) + '-' +  (form.get('range')?.value?.[1] | currency)}}</span
+      >
+      <p-slider
+        formControlName="range"
+        [min]="minRange"
+        [max]="maxRange"
+        step="0.1"
+        [animate]="true"
+        [range]="true"
+        styleClass="w-56"
+      />
+    </label>
+    <div class="flex flex-column gap-2">
+      <span>Stops</span>
+      <app-stops-control formControlName="stops" [options]="filters$().stops"></app-stops-control>
+    </div>
+  </aside>
+
+  <div class="main-section">
+    <ul class="flex flex-column gap-3">
+      @for(flight of (flightsToShow$ | async); track $index) {
+      <app-flight-card (bookClickEvent)="onBookClick($event)" [flightData]="flight"></app-flight-card>
+      }
+    </ul>
+    <p-button
+      (click)="loadMore()"
+      severity="secondary"
+      variant="outlined"
+      label="Load More"
+      [fluid]="true"
+      [size]="'large'"
+    ></p-button>
+  </div>
+</div>
