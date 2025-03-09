@@ -1,5 +1,4 @@
 <div class="flex gap-3 align-items-start">
-  @if(filtersData$ | async; as filters) {
   <aside [formGroup]="form" class="filter element-border">
     <label>
       <span>Sort By</span>
@@ -23,10 +22,10 @@
     </label>
     <div class="flex flex-column gap-2">
       <span>Stops</span>
-      <app-stops-control formControlName="stopss" [options]="stopOptions"></app-stops-control>
+      <app-stops-control formControlName="stops" [options]="filters$().stops"></app-stops-control>
     </div>
   </aside>
-  }
+
   <div class="list">
     <ul class="flex flex-column gap-4">
       @for(flight of (flightsToShow$ | async); track $index) {

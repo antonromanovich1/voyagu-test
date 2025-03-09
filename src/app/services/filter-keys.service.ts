@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { FlightDto } from '../models/flight.model';
-import { BehaviorSubject } from 'rxjs';
 
 export type FilterData = { priceHigh: number; priceLow: number; stops: number[] };
 
@@ -8,22 +7,10 @@ export type FilterData = { priceHigh: number; priceLow: number; stops: number[] 
   providedIn: 'root',
 })
 export class FilterKeysService {
-  filterKeys = [
-    'airline',
-    'arrival_airport',
-    'arrival_date',
-    'arrival_time',
-    'departure_airport',
-    'departure_date',
-    'departure_time',
-    'duration_minutes',
-    'stops',
-  ];
-
-  // public filtersData: FilterData = {} as FilterData;
-  public filtersData$ = new BehaviorSubject<FilterData>({} as FilterData);
+  public filterData$ = signal<FilterData>({} as FilterData);
 
   public buildFilterKeys(data: FlightDto[]) {
+    console.log(data);
     const filters = data.reduce((acc, { price, flights }) => {
       acc.priceHigh = Math.max(acc.priceHigh || 0, price);
       acc.priceLow = Math.min(acc.priceLow || price, price);
@@ -38,7 +25,7 @@ export class FilterKeysService {
       });
       return acc;
     }, {} as FilterData);
-    this.filtersData$.next(filters);
+    this.filterData$.set(filters);
   }
 
   private splitArray<T extends []>(arr: T, size: number) {

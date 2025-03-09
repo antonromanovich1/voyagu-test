@@ -1,23 +1,14 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FlightService } from '../../services/flight.service';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { ButtonModule } from 'primeng/button';
-import { filter, map, take, withLatestFrom } from 'rxjs';
+import { map } from 'rxjs';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { FilterKeysService } from '../../services/filter-keys.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StopsControlComponent } from '../stops-control/stops-control.component';
 
 @Component({
@@ -51,14 +42,24 @@ export class FlightsComponent implements OnInit {
   private flightService = inject(FlightService);
   protected filterKeysService = inject(FilterKeysService);
   private fb = inject(NonNullableFormBuilder);
-  private destroyRef$ = inject(DestroyRef);
 
-  filtersData$ = this.filterKeysService.filtersData$;
+  filters$ = this.filterKeysService.filterData$;
+
+  rangeInitialValueEffect = effect(() => {
+    const filters = this.filters$();
+    if (Object.keys(filters).length) {
+      this.minRange = Math.floor(this.filters$().priceLow / 100) * 100;
+      this.maxRange = Math.ceil(this.filters$().priceHigh / 100) * 100;
+
+      this.form.get('range')?.setValue([this.filters$().priceLow, this.filters$().priceHigh]);
+      console.log(this.form.value, this.minRange, this.maxRange);
+    }
+  });
 
   readonly form = this.fb.group({
     sort: [this.sortOptions[0].value],
     range: [[0, 0]],
-    stopss: [],
+    stops: [],
   });
 
   protected stopOptions: number[] = [];
@@ -68,27 +69,6 @@ export class FlightsComponent implements OnInit {
 
   ngOnInit(): void {
     this.flightService.getFlights();
-    this.filtersData$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef$),
-        filter((f) => !!f.priceHigh),
-      )
-      .subscribe((filters) => {
-        if (filters.priceHigh) {
-          this.minRange = Math.floor(filters.priceLow / 100) * 100;
-          this.maxRange = Math.ceil(filters.priceHigh / 100) * 100;
-
-          this.form.get('range')?.setValue([filters.priceLow, filters.priceHigh]);
-
-          const stops = [] as number[];
-
-          filters.stops.forEach((stop) => {
-            stops.push(stop);
-          });
-
-          this.stopOptions = stops;
-        }
-      });
   }
 
   flightsToShow$ = this.flightService.flights$.pipe(map((flights) => flights.slice(0, this.ITEMS_PER_PAGE)));
