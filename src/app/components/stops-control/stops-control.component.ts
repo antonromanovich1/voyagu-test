@@ -75,5 +75,9 @@ export class StopsControlComponent implements ControlValueAccessor {
 
   onChange = (value: any) => {};
   onTouched = () => {};
-  writeValue(obj: any): void {}
+  writeValue(obj: any): void {
+    if (obj.length) {
+      this.stopsControlArray.controls[0]?.setValue(true);
+    }
+  }
 }

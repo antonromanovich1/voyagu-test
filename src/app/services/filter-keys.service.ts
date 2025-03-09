@@ -10,7 +10,6 @@ export class FilterKeysService {
   public filterData$ = signal<FilterData>({} as FilterData);
 
   public buildFilterKeys(data: FlightDto[]) {
-    console.log(data);
     const filters = data.reduce((acc, { price, flights }) => {
       acc.priceHigh = Math.max(acc.priceHigh || 0, price);
       acc.priceLow = Math.min(acc.priceLow || price, price);

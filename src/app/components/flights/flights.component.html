@@ -2,7 +2,7 @@
   <aside [formGroup]="form" class="filter element-border">
     <label>
       <span>Sort By</span>
-      <p-select formControlName="sort" [options]="sortOptions"></p-select>
+      <p-select formControlName="sort" optionValue="value" optionLabel="label" [options]="sortOptions"></p-select>
     </label>
     <label>
       <span>Price</span>
@@ -32,6 +32,13 @@
       <app-flight-card [flightData]="flight"></app-flight-card>
       }
     </ul>
-    <p-button severity="secondary" variant="outlined" label="Load More" [fluid]="true" [size]="'large'"></p-button>
+    <p-button
+      (click)="loadMore()"
+      severity="secondary"
+      variant="outlined"
+      label="Load More"
+      [fluid]="true"
+      [size]="'large'"
+    ></p-button>
   </div>
 </div>

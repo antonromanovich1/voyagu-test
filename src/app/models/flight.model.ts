@@ -2,6 +2,7 @@ export type FlightDto = {
   flights: [Flight, Flight];
   id: number;
   price: number;
+  [key: string]: any;
 };
 
 export type Flight = {

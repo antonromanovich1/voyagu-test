@@ -3,13 +3,14 @@ import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FlightService } from '../../services/flight.service';
-import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { ButtonModule } from 'primeng/button';
-import { map } from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, debounceTime, map, merge, startWith } from 'rxjs';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { FilterKeysService } from '../../services/filter-keys.service';
 import { StopsControlComponent } from '../stops-control/stops-control.component';
+import { FlightDto } from '../../models/flight.model';
 
 @Component({
   selector: 'app-flights',
@@ -29,14 +30,18 @@ import { StopsControlComponent } from '../stops-control/stops-control.component'
   styleUrl: './flights.component.scss',
 })
 export class FlightsComponent implements OnInit {
+  // default items quantity per page
   ITEMS_PER_PAGE = 5;
 
+  // To change skip manually by pressing loadMore button
+  skipManual$ = new BehaviorSubject(this.ITEMS_PER_PAGE);
+
   protected readonly sortOptions = [
-    { label: 'Price (Lowest)', value: 'price-low' },
-    { label: 'Price (Highest)', value: 'price-high' },
-    { label: 'Departure (Early)', value: 'dep-early' },
-    { label: 'Departure (Late)', value: 'dep-late' },
-    { label: 'Duration  (Short)', value: 'duration' },
+    { label: 'Price (Lowest)', value: 'price-asc' },
+    { label: 'Price (Highest)', value: 'price-desc' },
+    { label: 'Departure (Early)', value: 'dep-asc' },
+    { label: 'Departure (Late)', value: 'dep-desc' },
+    { label: 'Duration  (Short)', value: 'duration-asc' },
   ];
 
   private flightService = inject(FlightService);
@@ -45,21 +50,23 @@ export class FlightsComponent implements OnInit {
 
   filters$ = this.filterKeysService.filterData$;
 
-  rangeInitialValueEffect = effect(() => {
+  private readonly rangeInitialValueEffect = effect(() => {
     const filters = this.filters$();
     if (Object.keys(filters).length) {
       this.minRange = Math.floor(this.filters$().priceLow / 100) * 100;
       this.maxRange = Math.ceil(this.filters$().priceHigh / 100) * 100;
 
-      this.form.get('range')?.setValue([this.filters$().priceLow, this.filters$().priceHigh]);
-      console.log(this.form.value, this.minRange, this.maxRange);
+      const [firstStopOption] = filters.stops;
+
+      this.rangeControl.setValue([this.filters$().priceLow, this.filters$().priceHigh]);
+      this.stopsControl.setValue([firstStopOption.toString()]);
     }
   });
 
   readonly form = this.fb.group({
     sort: [this.sortOptions[0].value],
     range: [[0, 0]],
-    stops: [],
+    stops: [['0']],
   });
 
   protected stopOptions: number[] = [];
@@ -71,8 +78,68 @@ export class FlightsComponent implements OnInit {
     this.flightService.getFlights();
   }
 
-  flightsToShow$ = this.flightService.flights$.pipe(map((flights) => flights.slice(0, this.ITEMS_PER_PAGE)));
-  // skip$ = new BehaviorSubject(this.ITEMS_PER_PAGE);
-  // sort$ = new BehaviorSubject('price-low');
-  // range$ = new BehaviorSubject(this.rangeValues);
+  get stopsControl() {
+    return this.form.get('stops') as FormControl;
+  }
+
+  get rangeControl() {
+    return this.form.get('range') as FormControl;
+  }
+
+  get sortControl() {
+    return this.form.get('sort') as FormControl;
+  }
+
+  // Maps value from stop control into cb function
+  private readonly stops$ = this.stopsControl.valueChanges.pipe(
+    map((value) => {
+      return (arr: FlightDto[]) => {
+        return arr.filter((flight) => flight.flights.some((f) => value.includes(f.stops.toString())));
+      };
+    }),
+  );
+
+  // Maps value from range control into cb function
+  private readonly range$ = this.rangeControl.valueChanges.pipe(
+    map((value) => {
+      const [low, heigh] = value;
+      return (arr: FlightDto[]) => {
+        return arr.filter(({ price }) => price >= value[0] && price <= value[1]);
+      };
+    }),
+  );
+
+  // Maps value from sort control into cb function
+  private readonly sort$ = this.sortControl.valueChanges.pipe(
+    startWith(this.sortOptions[0].value),
+    map((value) => {
+      const [key, order] = value.split('-');
+      return (arr: FlightDto[]) => {
+        return [...arr].sort((a, b) => (order === 'asc' ? a[key] - b[key] : b[key] - a[key]));
+      };
+    }),
+  );
+
+  // Combines all filters mapped to callbacks
+  private readonly filtersChange$ = combineLatest([this.stops$, this.range$, this.sort$]).pipe(debounceTime(300));
+
+  // Applies all callback
+  private readonly filteredFlights$ = this.filtersChange$.pipe(
+    combineLatestWith(this.flightService.flights$),
+    map(([filters, flights]) => {
+      return filters.reduce((acc: FlightDto[], cb: (arr: FlightDto[]) => FlightDto[]) => cb(acc), flights);
+    }),
+  );
+
+  //To reset load more quantity on filtering change
+  private readonly skip$ = merge(this.skipManual$, this.filtersChange$.pipe(map(() => this.ITEMS_PER_PAGE)));
+
+  protected readonly flightsToShow$ = this.skip$.pipe(
+    combineLatestWith(this.filteredFlights$),
+    map(([skip, flights]) => flights.slice(0, skip)),
+  );
+
+  protected loadMore() {
+    this.skipManual$.next(this.skipManual$.value + this.ITEMS_PER_PAGE);
+  }
 }
