@@ -23,30 +23,7 @@
     </label>
     <div class="flex flex-column gap-2">
       <span>Stops</span>
-      <div class="flex align-items-center gap-2">
-        <p-checkbox formControlName="allStop" [binary]="true" [size]="'large'"></p-checkbox>
-        <label>{{ 'All Stops' }}</label>
-      </div>
-      <div class="flex flex-column gap-2" formArrayName="stops">
-        @for(checkbox of stops.controls; track $index) {
-        <div class="flex align-items-center gap-2">
-          <p-checkbox
-            name="group"
-            (onChange)="test()"
-            [formControlName]="$index"
-            [binary]="true"
-            [size]="'large'"
-          ></p-checkbox>
-          <label>{{
-            stopTest[$index] === '0'
-              ? 'Nonstop'
-              : +stopTest[$index] > 1
-              ? stopTest[$index] + ' stops'
-              : stopTest[$index] + ' stop'
-          }}</label>
-        </div>
-        }
-      </div>
+      <app-stops-control formControlName="stopss" [options]="stopOptions"></app-stops-control>
     </div>
   </aside>
   }

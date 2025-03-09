@@ -3,13 +3,22 @@ import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FlightService } from '../../services/flight.service';
-import { FormArray, FormBuilder, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { ButtonModule } from 'primeng/button';
-import { filter, map } from 'rxjs';
+import { filter, map, take, withLatestFrom } from 'rxjs';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { FilterKeysService } from '../../services/filter-keys.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { StopsControlComponent } from '../stops-control/stops-control.component';
 
 @Component({
   selector: 'app-flights',
@@ -23,6 +32,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     FlightCardComponent,
     ReactiveFormsModule,
     CurrencyPipe,
+    StopsControlComponent,
   ],
   templateUrl: './flights.component.html',
   styleUrl: './flights.component.scss',
@@ -48,15 +58,10 @@ export class FlightsComponent implements OnInit {
   readonly form = this.fb.group({
     sort: [this.sortOptions[0].value],
     range: [[0, 0]],
-    allStop: [true],
-    stops: this.fb.array([]),
+    stopss: [],
   });
 
-  get stops(): FormArray {
-    return this.form.get('stops') as FormArray;
-  }
-
-  stopTest: string[] = [];
+  protected stopOptions: number[] = [];
 
   protected minRange = 500;
   protected maxRange = 6000;
@@ -69,21 +74,21 @@ export class FlightsComponent implements OnInit {
         filter((f) => !!f.priceHigh),
       )
       .subscribe((filters) => {
-        if (filters) {
+        if (filters.priceHigh) {
           this.minRange = Math.floor(filters.priceLow / 100) * 100;
           this.maxRange = Math.ceil(filters.priceHigh / 100) * 100;
 
           this.form.get('range')?.setValue([filters.priceLow, filters.priceHigh]);
+
+          const stops = [] as number[];
+
           filters.stops.forEach((stop) => {
-            this.stops.push(this.fb.control(false));
-            this.stopTest.push(stop.toString());
+            stops.push(stop);
           });
+
+          this.stopOptions = stops;
         }
       });
-  }
-
-  test() {
-    console.log(this.form.value);
   }
 
   flightsToShow$ = this.flightService.flights$.pipe(map((flights) => flights.slice(0, this.ITEMS_PER_PAGE)));
