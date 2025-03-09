@@ -1,0 +1,12 @@
+.plane-icon {
+  background: url('../../../assets/icon.svg') no-repeat;
+  background-size: contain;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.fligth-wrap {
+  border-bottom: 1px solid var(--divider-color);
+  color: #0a1d3d;
+}

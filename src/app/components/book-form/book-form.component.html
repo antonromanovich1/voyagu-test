@@ -1,1 +1,19 @@
-<p>book-form works!</p>
+<div class="flex gap-3 align-items-start font-normal">
+  <div class="main-section">
+    <h3 class="text-xl font-semibold">Travellers</h3>
+    <div class="element-border"></div>
+  </div>
+  <aside class="aside p-0">
+    <h3 class="text-xl font-semibold">Price Summary</h3>
+    <div class="element-border flex flex-column p-3">
+      <div class="flex justify-content-between fligth-wrap pb-3">
+        <span class="flex align-items-center gap-1"><span class="plane-icon"></span>Flight</span>
+        <span>{{ 2399.0 | currency }}</span>
+      </div>
+      <div class="flex justify-content-between align-items-end pt-3">
+        <span>Total</span>
+        <span class="text-4xl" [innerHTML]="2399.0 | currencyDecimalSeparate"></span>
+      </div>
+    </div>
+  </aside>
+</div>
