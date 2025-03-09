@@ -54,7 +54,7 @@ export class FlightsComponent implements OnInit {
 
   filters$ = this.filterKeysService.filterData$;
 
-  private readonly rangeInitialValueEffect = effect(() => {
+  private readonly formInitialValueEffect = effect(() => {
     const filters = this.filters$();
     if (Object.keys(filters).length) {
       this.minRange = Math.floor(this.filters$().priceLow / 100) * 100;
