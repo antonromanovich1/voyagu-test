@@ -4,7 +4,6 @@ import {
   AbstractControl,
   ControlValueAccessor,
   FormArray,
-  FormGroup,
   FormsModule,
   NG_VALUE_ACCESSOR,
   NonNullableFormBuilder,
@@ -54,7 +53,7 @@ export class StopsControlComponent implements ControlValueAccessor {
 
   private formatValue(value: number[]) {
     return value.reduce((acc, curr, idx: number) => {
-      curr && acc.push(this.options()[idx].toString());
+      curr && acc.push(this.options()[idx]?.toString());
       return acc;
     }, [] as string[]);
   }
