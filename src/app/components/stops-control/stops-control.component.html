@@ -1,0 +1,28 @@
+<div class="flex flex-column gap-2">
+  <div class="flex align-items-center gap-2">
+    <p-checkbox
+      [ngModel]="allToggle$ | async"
+      [disabled]="allToggle$ | async"
+      (ngModelChange)="onAllToggleChange($event)"
+      [binary]="true"
+      [size]="'large'"
+    ></p-checkbox>
+    <label>{{ 'All Stops' }}</label>
+  </div>
+  <div [formGroup]="form">
+    <div class="flex flex-column gap-2" formArrayName="stops">
+      @for(control of stopsControlArray.controls; track $index) {
+      <div class="flex align-items-center gap-2">
+        <p-checkbox name="group" [formControlName]="$index" [binary]="true" [size]="'large'"></p-checkbox>
+        <label>{{
+          options()![$index] === 0
+            ? 'Nonstop'
+            : options()![$index] > 1
+            ? options()![$index] + ' stops'
+            : options()![$index] + ' stop'
+        }}</label>
+      </div>
+      }
+    </div>
+  </div>
+</div>
