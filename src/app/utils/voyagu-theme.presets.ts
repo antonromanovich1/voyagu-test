@@ -4,17 +4,17 @@ import { definePreset } from '@primeng/themes';
 export const VoyaguTest = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '#f5f8fe',
-      100: '#cddffa',
-      200: '#a6c6f6',
-      300: '#7eadf2',
-      400: '#5794ee',
-      500: '#2f7bea',
-      600: '#2869c7',
-      700: '#2156a4',
-      800: '#1a4481',
-      900: '#13315e',
-      950: '#0c1f3b',
+      50: '#f3f4f5',
+      100: '#c4c9d0',
+      200: '#969eac',
+      300: '#677387',
+      400: '#394862',
+      500: '#0a1d3d',
+      600: '#091934',
+      700: '#07142b',
+      800: '#061022',
+      900: '#040c18',
+      950: '#03070f',
     },
     formField: {
       paddingX: '0.75rem',

@@ -7,6 +7,7 @@
   --content-width: 880px;
   --card-size: 160px;
   --grey-color: #898390;
+  --blue-main: #2f7bea;
 }
 
 // Reset&Common
@@ -31,6 +32,22 @@ body {
   display: block;
   max-width: 1440px;
   margin: 0 auto;
+}
+
+// PrimeNG
+
+.p-slider .p-slider-range {
+  --p-slider-range-background: var(--blue-main);
+}
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box {
+  --p-checkbox-checked-background: var(--blue-main);
+  --p-checkbox-checked-border-color: var(--blue-main);
+}
+
+.p-checkbox.p-checkbox-checked:hover .p-checkbox-box {
+  --p-checkbox-checked-hover-background: var(--blue-main);
+  --p-checkbox-checked-hover-border-color: var(--blue-main);
 }
 
 // Utils
