@@ -35,6 +35,23 @@ body {
 
 // Utils
 
+.aside {
+  padding: 1rem;
+  flex-shrink: 0;
+  flex-basis: 240px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.main-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .element-border {
   border: 1px solid var(--divider-color);
   border-radius: 12px;
@@ -46,4 +63,9 @@ body {
 
 .grey-color {
   color: var(--grey-color);
+}
+
+.currency-decimal {
+  font-size: 0.875rem;
+  font-weight: 400;
 }

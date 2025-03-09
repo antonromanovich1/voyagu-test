@@ -1,5 +1,5 @@
 <div class="flex gap-3 align-items-start">
-  <aside [formGroup]="form" class="filter element-border">
+  <aside [formGroup]="form" class="filter aside element-border">
     <label>
       <span>Sort By</span>
       <p-select formControlName="sort" optionValue="value" optionLabel="label" [options]="sortOptions"></p-select>
@@ -26,7 +26,7 @@
     </div>
   </aside>
 
-  <div class="list">
+  <div class="main-section">
     <ul class="flex flex-column gap-4">
       @for(flight of (flightsToShow$ | async); track $index) {
       <app-flight-card [flightData]="flight"></app-flight-card>

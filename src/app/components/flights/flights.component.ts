@@ -11,6 +11,7 @@ import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { FilterKeysService } from '../../services/filter-keys.service';
 import { StopsControlComponent } from '../stops-control/stops-control.component';
 import { FlightDto } from '../../models/flight.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-flights',
@@ -93,6 +94,7 @@ export class FlightsComponent implements OnInit {
 
   // Maps value from stop control into cb function
   private readonly stops$ = this.stopsControl.valueChanges.pipe(
+    takeUntilDestroyed(),
     map((value) => {
       return (arr: FlightDto[]) => {
         return arr.filter((flight) => flight.flights.some((f) => value.includes(f.stops.toString())));
@@ -102,6 +104,7 @@ export class FlightsComponent implements OnInit {
 
   // Maps value from range control into cb function
   private readonly range$ = this.rangeControl.valueChanges.pipe(
+    takeUntilDestroyed(),
     map((value) => {
       const [low, heigh] = value;
       return (arr: FlightDto[]) => {
@@ -112,6 +115,7 @@ export class FlightsComponent implements OnInit {
 
   // Maps value from sort control into cb function
   private readonly sort$ = this.sortControl.valueChanges.pipe(
+    takeUntilDestroyed(),
     startWith(this.sortOptions[0].value),
     map((value) => {
       return this.createSortFunction(value);
@@ -119,10 +123,14 @@ export class FlightsComponent implements OnInit {
   );
 
   // Combines all filters mapped to callbacks
-  private readonly filtersChange$ = combineLatest([this.stops$, this.range$, this.sort$]).pipe(debounceTime(300));
+  private readonly filtersChange$ = combineLatest([this.stops$, this.range$, this.sort$]).pipe(
+    takeUntilDestroyed(),
+    debounceTime(300),
+  );
 
   // Applies all callback
   private readonly filteredFlights$ = this.filtersChange$.pipe(
+    takeUntilDestroyed(),
     combineLatestWith(this.flightService.flights$),
     map(([filters, flights]) => {
       return filters.reduce((acc: FlightDto[], cb: (arr: FlightDto[]) => FlightDto[]) => cb(acc), flights);
@@ -133,6 +141,7 @@ export class FlightsComponent implements OnInit {
   private readonly skip$ = merge(this.skipManual$, this.filtersChange$.pipe(map(() => this.ITEMS_PER_PAGE)));
 
   protected readonly flightsToShow$ = this.skip$.pipe(
+    takeUntilDestroyed(),
     combineLatestWith(this.filteredFlights$),
     map(([skip, flights]) => flights.slice(0, skip)),
   );
