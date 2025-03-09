@@ -39,9 +39,10 @@ export class FlightsComponent implements OnInit {
   protected readonly sortOptions = [
     { label: 'Price (Lowest)', value: 'price-asc' },
     { label: 'Price (Highest)', value: 'price-desc' },
-    { label: 'Departure (Early)', value: 'dep-asc' },
-    { label: 'Departure (Late)', value: 'dep-desc' },
-    { label: 'Duration  (Short)', value: 'duration-asc' },
+    { label: 'Departure (Early)', value: 'departure_time-asc' },
+    { label: 'Departure (Late)', value: 'departure_time-desc' },
+    { label: 'Duration  (Short)', value: 'duration_minutes-asc' },
+    { label: 'Duration  (Long)', value: 'duration_minutes-desc' },
   ];
 
   private flightService = inject(FlightService);
@@ -113,10 +114,7 @@ export class FlightsComponent implements OnInit {
   private readonly sort$ = this.sortControl.valueChanges.pipe(
     startWith(this.sortOptions[0].value),
     map((value) => {
-      const [key, order] = value.split('-');
-      return (arr: FlightDto[]) => {
-        return [...arr].sort((a, b) => (order === 'asc' ? a[key] - b[key] : b[key] - a[key]));
-      };
+      return this.createSortFunction(value);
     }),
   );
 
@@ -141,5 +139,44 @@ export class FlightsComponent implements OnInit {
 
   protected loadMore() {
     this.skipManual$.next(this.skipManual$.value + this.ITEMS_PER_PAGE);
+  }
+
+  // Define a separate sort function
+  private createSortFunction(value: string): (arr: FlightDto[]) => FlightDto[] {
+    const [key, order] = value.split('-');
+    return (arr: FlightDto[]) => {
+      return [...arr].sort((a, b) => {
+        if (key in a) {
+          return order === 'asc' ? a[key] - b[key] : b[key] - a[key];
+        } else {
+          switch (key) {
+            case 'departure_time':
+              // Helper function to convert date and time strings to a Date object
+              const getDateTime = (flight: any) => {
+                // Parse date parts (from format DD-MM-YYYY)
+                const [day, month, year] = flight.departure_date.split('-').map(Number);
+                // Parse time parts (from format HH:MM)
+                const [hours, minutes] = flight.departure_time.split(':').map(Number);
+
+                // Create new Date object (months are 0-indexed in JavaScript)
+                return new Date(year, month - 1, day, hours, minutes);
+              };
+
+              const aDateTime = getDateTime(a.flights[0]).getTime();
+              const bDateTime = getDateTime(b.flights[0]).getTime();
+
+              return order === 'asc' ? aDateTime - bDateTime : bDateTime - aDateTime;
+            case 'duration':
+              return order === 'asc'
+                ? a.flights.reduce((acc, curr) => acc + curr[key], 0) -
+                    b.flights.reduce((acc, curr) => acc + curr[key], 0)
+                : b.flights.reduce((acc, curr) => acc + curr[key], 0) -
+                    a.flights.reduce((acc, curr) => acc + curr[key], 0);
+            default:
+              return order === 'asc' ? a.flights[0][key] - b.flights[0][key] : b.flights[0][key] - a.flights[0][key];
+          }
+        }
+      });
+    };
   }
 }

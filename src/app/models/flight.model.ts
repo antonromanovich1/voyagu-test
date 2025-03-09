@@ -15,4 +15,5 @@ export type Flight = {
   departure_time: string;
   duration_minutes: number;
   stops: number;
+  [key: string]: any;
 };
