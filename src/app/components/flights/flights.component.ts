@@ -12,6 +12,7 @@ import { FilterKeysService } from '../../services/filter-keys.service';
 import { StopsControlComponent } from '../stops-control/stops-control.component';
 import { FlightDto } from '../../models/flight.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-flights',
@@ -49,6 +50,7 @@ export class FlightsComponent implements OnInit {
   private flightService = inject(FlightService);
   protected filterKeysService = inject(FilterKeysService);
   private fb = inject(NonNullableFormBuilder);
+  private router = inject(Router);
 
   filters$ = this.filterKeysService.filterData$;
 
@@ -148,6 +150,10 @@ export class FlightsComponent implements OnInit {
 
   protected loadMore() {
     this.skipManual$.next(this.skipManual$.value + this.ITEMS_PER_PAGE);
+  }
+
+  protected onBookClick(totalPrice: number) {
+    this.router.navigate(['booking'], { state: { totalPrice } });
   }
 
   // Define a separate sort function

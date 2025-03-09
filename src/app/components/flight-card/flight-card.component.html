@@ -34,6 +34,6 @@
   <div class="card-right flex flex-column">
     <div class="text-lg font-semibold text-center mb-1">{{ flightData().price | currency }}</div>
     <small class="text-sm font-normal text-center">Per person</small>
-    <p-button class="mt-auto" [fluid]="true" [size]="'large'" label="Book"></p-button>
+    <p-button (click)="onBookClick(flightData().price)" class="mt-auto" [fluid]="true" [size]="'large'" label="Book"></p-button>
   </div>
 </div>

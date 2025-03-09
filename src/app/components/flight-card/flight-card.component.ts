@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { FormattedMinutesPipe } from '../../pipes/formatted-minutes.pipe';
 import { FormatToAmPmPipe } from '../../pipes/format-to-am-pm.pipe';
@@ -14,4 +14,9 @@ import { FlightDto } from '../../models/flight.model';
 })
 export class FlightCardComponent {
   flightData = input.required<FlightDto>();
+  bookClickEvent = output<number>();
+
+  onBookClick(price: number) {
+    this.bookClickEvent.emit(price);
+  }
 }

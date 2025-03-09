@@ -29,7 +29,7 @@
   <div class="main-section">
     <ul class="flex flex-column gap-4">
       @for(flight of (flightsToShow$ | async); track $index) {
-      <app-flight-card [flightData]="flight"></app-flight-card>
+      <app-flight-card (bookClickEvent)="onBookClick($event)" [flightData]="flight"></app-flight-card>
       }
     </ul>
     <p-button
